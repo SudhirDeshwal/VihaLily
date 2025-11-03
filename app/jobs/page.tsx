@@ -5,19 +5,16 @@ export default function Jobs() {
     {
       role: 'Registered Nurse (RN)',
       type: 'Full-time / Part-time / Per-diem',
-      location: 'Various locations across Ontario',
       description: 'Experienced RNs needed for long-term care, hospitals, and community settings.'
     },
     {
       role: 'Registered Practical Nurse (RPN)',
       type: 'Full-time / Part-time',
-      location: 'Long-term care facilities',
       description: 'Licensed RPNs for retirement homes and nursing facilities.'
     },
     {
       role: 'Personal Support Worker (PSW)',
       type: 'Full-time / Part-time',
-      location: 'LTC facilities & home care',
       description: 'Certified PSWs for personal care and support services.'
     }
   ];
@@ -45,9 +42,6 @@ export default function Jobs() {
                 color: 'var(--primary-blue)'
               }}>
                 {job.type}
-              </p>
-              <p style={{ color: 'var(--text-medium)', marginBottom: '1rem' }}>
-                📍 <strong>Location:</strong> {job.location}
               </p>
               <p style={{ color: 'var(--text-medium)', lineHeight: '1.8', marginBottom: '1.5rem' }}>
                 {job.description}
@@ -84,25 +78,25 @@ export default function Jobs() {
           <h2 className="section-title">Why Join Viha Lily Care?</h2>
           <div className="cards-grid">
             <div className="card">
-              <div className="card-icon">💰</div>
+              <div className="card-icon" aria-hidden="true">💰</div>
               <h3>Competitive Pay</h3>
               <p>Attractive compensation packages with benefits for full-time positions.</p>
             </div>
             
             <div className="card">
-              <div className="card-icon">📅</div>
+              <div className="card-icon" aria-hidden="true">🗓️</div>
               <h3>Flexible Scheduling</h3>
               <p>Choose shifts that work with your lifestyle and commitments.</p>
             </div>
             
             <div className="card">
-              <div className="card-icon">🎓</div>
+              <div className="card-icon" aria-hidden="true">📈</div>
               <h3>Professional Growth</h3>
               <p>Access to training opportunities and career advancement support.</p>
             </div>
             
             <div className="card">
-              <div className="card-icon">🤝</div>
+              <div className="card-icon" aria-hidden="true">🤝</div>
               <h3>Supportive Team</h3>
               <p>Work with a team that values your contribution and well-being.</p>
             </div>
@@ -112,4 +106,3 @@ export default function Jobs() {
     </section>
   );
 }
-

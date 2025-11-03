@@ -102,8 +102,7 @@ export default function Privacy() {
             <p style={{ color: 'var(--text-dark)', fontWeight: '600' }}>
               Viha Lily Care Inc.<br />
               Email: infovihalilycareinc@gmail.com<br />
-              Phone: (647) 641-9660<br />
-              Location: Brampton, Ontario
+              Phone: (647) 641-9660
             </p>
 
             <h3 style={{ color: 'var(--text-dark)', marginTop: '2rem', marginBottom: '1rem', fontSize: '1.5rem' }}>

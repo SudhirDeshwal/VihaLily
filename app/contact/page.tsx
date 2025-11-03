@@ -91,38 +91,22 @@ export default function Contact() {
 
         <div className="contact-info">
           <div className="contact-item">
-            <div className="contact-icon">📧</div>
+            <div className="contact-icon" aria-hidden="true">📧</div>
             <h3>Email Us</h3>
             <p>infovihalilycareinc@gmail.com</p>
           </div>
 
           <div className="contact-item">
-            <div className="contact-icon">📞</div>
+            <div className="contact-icon" aria-hidden="true">📞</div>
             <h3>Call Us</h3>
             <p>(647) 641-9660</p>
             <p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: 'var(--text-light)' }}>
               Monday - Friday: 8:00 AM - 6:00 PM
             </p>
           </div>
-
-          <div className="contact-item">
-            <div className="contact-icon">📍</div>
-            <h3>Visit Us</h3>
-            <p>Brampton, Ontario</p>
-          </div>
         </div>
 
-        {/* Optional: Add Google Maps embed */}
-        {false && (
-          <div className="map-container">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2887.6787295953235!2d-79.75838768450249!3d43.65322627912166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b3461e8f5e6ed%3A0x4a2f5f0e7e5c8c8c!2sBrampton%2C%20ON!5e0!3m2!1sen!2sca!4v1234567890"
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        )}
+        {/* Map removed by request */}
 
         <div className="form-container">
           {status && (
@@ -231,4 +215,3 @@ export default function Contact() {
     </section>
   );
 }
-
