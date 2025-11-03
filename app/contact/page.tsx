@@ -99,7 +99,7 @@ export default function Contact() {
           <div className="contact-item">
             <div className="contact-icon">📞</div>
             <h3>Call Us</h3>
-            <p>(905) 000-0000</p>
+            <p>(647) 641-9660</p>
             <p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: 'var(--text-light)' }}>
               Monday - Friday: 8:00 AM - 6:00 PM
             </p>
@@ -166,7 +166,7 @@ export default function Contact() {
                 type="tel"
                 id="phone"
                 name="phone"
-                placeholder="(905) 555-0000"
+                placeholder="(647) 641-9660"
                 value={formData.phone}
                 onChange={handleInputChange}
               />

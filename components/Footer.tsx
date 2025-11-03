@@ -27,7 +27,7 @@ export default function Footer() {
             <h3>Contact Info</h3>
             <p>📍 Brampton, Ontario</p>
             <p>📧 infovihalilycareinc@gmail.com</p>
-            <p>📞 (905) 000-0000</p>
+            <p>📞 (647) 641-9660</p>
           </div>
 
           <div className="footer-section">

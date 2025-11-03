@@ -156,7 +156,7 @@ export default function Apply() {
                 id="phone"
                 name="phone"
                 required
-                placeholder="(905) 555-0000"
+                placeholder="(647) 641-9660"
                 value={formData.phone}
                 onChange={handleInputChange}
               />
