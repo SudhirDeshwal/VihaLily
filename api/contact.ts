@@ -28,7 +28,24 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const data = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const contentType = (req.headers?.['content-type'] || req.headers?.['Content-Type'] || '').toString();
+    let data: any = {};
+    if (req.body && typeof req.body === 'object') {
+      data = req.body;
+    } else if (typeof req.body === 'string') {
+      try {
+        data = JSON.parse(req.body || '{}');
+      } catch {
+        if (/application\/x-www-form-urlencoded/i.test(contentType)) {
+          const params = new URLSearchParams(req.body);
+          const o: Record<string, string> = {};
+          for (const [k, v] of params.entries()) o[k] = v;
+          data = o;
+        } else {
+          data = {};
+        }
+      }
+    }
 
     // Anti-bot checks
     const hp = (data?.hp ?? '').toString().trim();
