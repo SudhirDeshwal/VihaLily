@@ -27,43 +27,22 @@ export default function Apply() {
     setLoading(true);
     setStatus(null);
 
-    const FORMSPREE_FORM_ID = 'YOUR_FORM_ID'; // Replace with your actual Formspree form ID
-
     try {
-      // If form ID is not configured, show helpful message
-      if (FORMSPREE_FORM_ID === 'YOUR_FORM_ID') {
-        setTimeout(() => {
-          setLoading(false);
-          setStatus({
-            type: 'error',
-            message: 'Form is not yet configured. Please contact infovihalilycareinc@gmail.com directly, or set up Formspree (see SETUP.md).'
-          });
-          console.log('Form submission data:', formData);
-        }, 1000);
-        return;
-      }
-
-      // Using Formspree for form submission
-      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+      const response = await fetch('/api/apply', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          _subject: `Job Application from ${formData.firstName} ${formData.lastName}`,
-          _replyto: formData.email,
-          _format: 'plain',
+          source: typeof window !== 'undefined' ? window.location.href : '',
         }),
       });
 
       if (response.ok) {
-        setStatus({ 
-          type: 'success', 
-          message: 'Application submitted successfully! We will contact you soon via email or phone.' 
+        setStatus({
+          type: 'success',
+          message: 'Application submitted successfully! We will contact you soon via email or phone.'
         });
-        
-        // Reset form
+
         setFormData({
           firstName: '',
           lastName: '',
@@ -74,11 +53,16 @@ export default function Apply() {
           availability: '',
           message: '',
         });
-        
-        // Scroll to top
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setStatus({ type: 'error', message: 'Failed to submit application. Please try again.' });
+        const info = await response.json().catch(() => null as any);
+        const details = info?.message || info?.body || info?.details || '';
+        const statusText = info?.status || response.status;
+        setStatus({
+          type: 'error',
+          message: `Failed to submit application (status ${statusText}). ${details ? String(details).slice(0, 300) : 'Please try again.'}`
+        });
       }
     } catch (error) {
       setStatus({ type: 'error', message: 'An error occurred. Please try again later.' });
@@ -230,7 +214,7 @@ export default function Apply() {
                 rows={4}
                 value={formData.message}
                 onChange={handleInputChange}
-                placeholder="Tell us about yourself, your experience, certifications, or any questions you have..."
+                placeholder="Please paste your resume here which should include your experience, certifications, or any other relevant information."
               />
             </div>
 
@@ -243,14 +227,7 @@ export default function Apply() {
               {loading ? 'Submitting...' : 'Submit Application'}
             </button>
 
-            <p style={{ 
-              marginTop: '1rem', 
-              textAlign: 'center', 
-              color: 'var(--text-light)', 
-              fontSize: '0.875rem' 
-            }}>
-              By submitting this form, you agree to our <a href="/privacy" style={{ color: 'var(--primary-blue)' }}>Privacy Policy</a>.
-            </p>
+            {/* Removed privacy policy reference as requested */}
           </form>
         </div>
       </div>

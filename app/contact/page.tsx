@@ -24,43 +24,25 @@ export default function Contact() {
     setLoading(true);
     setStatus(null);
 
-    const FORMSPREE_FORM_ID = 'YOUR_FORM_ID'; // Replace with your actual Formspree form ID
-
     try {
-      // If form ID is not configured, show helpful message
-      if (FORMSPREE_FORM_ID === 'YOUR_FORM_ID') {
-        setTimeout(() => {
-          setLoading(false);
-          setStatus({
-            type: 'error',
-            message: 'Form is not yet configured. Please email infovihalilycareinc@gmail.com directly, or set up Formspree (see SETUP.md).'
-          });
-          console.log('Contact form submission data:', formData);
-        }, 1000);
-        return;
-      }
-
-      // Using Formspree for form submission
-      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          _subject: formData.subject,
-          _replyto: formData.email,
-          _format: 'plain',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
         }),
       });
 
       if (response.ok) {
-        setStatus({ 
-          type: 'success', 
-          message: 'Message sent successfully! We will get back to you soon.' 
+        setStatus({
+          type: 'success',
+          message: 'Message sent successfully! We will get back to you soon.'
         });
-        
-        // Reset form
+
         setFormData({
           name: '',
           email: '',
@@ -68,11 +50,16 @@ export default function Contact() {
           subject: '',
           message: '',
         });
-        
-        // Scroll to top
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        setStatus({ type: 'error', message: 'Failed to send message. Please try again.' });
+        const info = await response.json().catch(() => null as any);
+        const details = info?.message || info?.body || info?.details || info?.post?.body || '';
+        const statusText = info?.status || info?.post?.status || info?.get?.status || response.status;
+        setStatus({
+          type: 'error',
+          message: `Failed to send message (status ${statusText}). ${details ? String(details).slice(0, 300) : 'Please try again.'}`
+        });
       }
     } catch (error) {
       setStatus({ type: 'error', message: 'An error occurred. Please try again later.' });
@@ -93,7 +80,7 @@ export default function Contact() {
           <div className="contact-item">
             <div className="contact-icon" aria-hidden="true">📧</div>
             <h3>Email Us</h3>
-            <p>infovihalilycareinc@gmail.com</p>
+            <p>info@vihalilycare.ca</p>
           </div>
 
           <div className="contact-item">

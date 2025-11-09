@@ -25,14 +25,11 @@ export default function Footer() {
           
           <div className="footer-section">
             <h3>Contact Info</h3>
-            <p>📧 infovihalilycareinc@gmail.com</p>
+            <p>📧 info@vihalilycare.ca</p>
             <p>📞 (647) 641-9660</p>
           </div>
 
-          <div className="footer-section">
-            <h3>Legal</h3>
-            <p><Link href="/privacy">Privacy Policy</Link></p>
-          </div>
+          {/* Legal section removed as requested */}
         </div>
         
         <div className="footer-bottom">
