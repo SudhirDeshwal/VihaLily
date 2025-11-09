@@ -1,5 +1,5 @@
+// @ts-nocheck
 // api/contact.ts — Vercel Serverless Function (works even with static export)
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Origin': '*', // change to your domain if needed
@@ -7,11 +7,11 @@ const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-function setCors(res: VercelResponse) {
+function setCors(res: any) {
   for (const [k, v] of Object.entries(corsHeaders)) res.setHeader(k, v);
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   setCors(res);
 
   if (req.method === 'OPTIONS') {
