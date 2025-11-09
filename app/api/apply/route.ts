@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 
-const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzNOPpZC3-PBvUWtLDOTJSmfWWn0_FjLC6vU4Y0aTZAhXT0DIx4J4JWbiK18FS7ZYEg/exec';
+const APPS_SCRIPT_ENDPOINT = process.env.APPLY_APPS_SCRIPT_URL;
 
 export async function POST(req: Request) {
   try {
+    if (!APPS_SCRIPT_ENDPOINT) {
+      return NextResponse.json(
+        { ok: false, error: 'APPLY_APPS_SCRIPT_URL not set' },
+        { status: 500 }
+      );
+    }
     const data = await req.json();
 
     // Basic anti-bot checks (honeypot + time-to-submit)

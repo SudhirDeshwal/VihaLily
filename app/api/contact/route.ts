@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 
-// Use the public /macros/s/.../exec URL
-const APPS_SCRIPT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxQkE22Rhjl_EXRx6siKe8dABEGNO4EtTDSvpfnXE43ueQ772IJGNzjHCY2GR_kHOge/exec';
+// Read endpoint from env (configure in Vercel)
+const APPS_SCRIPT_ENDPOINT = process.env.CONTACT_APPS_SCRIPT_URL;
 
 export async function POST(req: Request) {
   try {
+    if (!APPS_SCRIPT_ENDPOINT) {
+      return NextResponse.json(
+        { ok: false, error: 'CONTACT_APPS_SCRIPT_URL not set' },
+        { status: 500 }
+      );
+    }
     const data = await req.json();
 
     // Basic anti-bot checks (honeypot + time-to-submit)

@@ -1,195 +1,56 @@
-# Viha Lily Care Inc. - Healthcare Staffing Website
+# Viha Lily Care Inc. � Website
 
-Modern, static website for Viha Lily Care Inc., a nursing & healthcare staffing agency in Ontario.
+Simple Next.js site for a healthcare staffing agency, with contact and job application forms that post to Google Apps Script.
 
-## 🎯 Features
+## Overview
+- Framework: Next.js (app router)
+- Styling: CSS (no framework)
+- Forms: Proxied to Google Apps Script via Next.js API routes
+- Hosting: Vercel (free)
 
-- ✅ Fully static website (no backend required)
-- ✅ Professional, responsive design
-- ✅ Contact and job application forms
-- ✅ All pages: Home, About Us, Services, Jobs, Apply, Contact, Privacy
-- ✅ Mobile-first responsive layout
-- ✅ Ready for free hosting (Vercel, Netlify, Cloudflare Pages)
+## Quick Start
+- Requirements
+  - Node.js 18+
+  - npm (or yarn/pnpm)
+- Install and run
+  - `npm install`
+  - Create `.env.local` using `.env.example` and fill both URLs (see below)
+  - `npm run dev` ? open http://localhost:3000
 
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+ installed
-- npm or yarn package manager
-
-### Installation
-
-1. Install dependencies:
-```bash
-npm install
+## Environment Variables
+Create `.env.local` in the project root:
 ```
-
-2. Run development server:
-```bash
-npm run dev
+CONTACT_APPS_SCRIPT_URL=https://script.google.com/.../exec
+APPLY_APPS_SCRIPT_URL=https://script.google.com/.../exec
 ```
+Notes
+- Both routes require these values. Missing values cause 500s from the API when you submit a form.
+- Use the public `/exec` URLs from �Manage deployments� in Apps Script.
+- In Apps Script, set: Execute as �Me�, Who has access �Anyone�.
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser
+## Google Apps Script
+- Contact: expects JSON with `name, email, phone, subject, message`.
+- Apply: expects JSON with `first_name, last_name, email, phone, position, experience_years, availability, additional_info, source`.
+- This repo already maps Apply page fields to those names in `app/api/apply/route.ts`.
 
-## 📁 Project Structure
+## Deploy with Vercel
+1) Push code to GitHub (repo: `SudhirDeshwal/VihaLily`).
+2) In Vercel ? New Project ? Import the repo (framework auto-detected).
+3) Add env vars in Vercel Project Settings ? Environment Variables:
+   - `CONTACT_APPS_SCRIPT_URL` = your contact `/exec` URL
+   - `APPLY_APPS_SCRIPT_URL` = your apply `/exec` URL
+   - Optional: `NEXT_PUBLIC_SITE_URL` = the public site URL
+4) Deploy. Future pushes auto-deploy.
 
-```
-├── app/
-│   ├── about/          # About Us page
-│   ├── services/       # Services page
-│   ├── jobs/           # Jobs/Careers page
-│   ├── apply/          # Job application form
-│   ├── contact/        # Contact form
-│   ├── privacy/        # Privacy Policy
-│   ├── layout.tsx      # Root layout with Navbar & Footer
-│   ├── page.tsx        # Home page
-│   └── globals.css     # Global styles
-├── components/
-│   ├── Navbar.tsx      # Navigation component
-│   └── Footer.tsx      # Footer component
-└── public/             # Static assets
-```
+## Logo & Icons
+- Your uploaded logo `app/logo/CarE.png` is served at `/logo` via `app/logo/route.ts`.
+- Navbar and Open Graph meta use `/logo`.
 
-## 📧 Form Integration
-
-Currently, forms are set up with placeholder submission logic. To enable actual email submissions:
-
-### Option 1: Formspree (Recommended)
-
-1. Sign up at [formspree.io](https://formspree.io)
-2. Create a new form
-3. Get your form ID
-4. Update `app/apply/page.tsx` and `app/contact/page.tsx`:
-
-```typescript
-const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    ...formData,
-    _to: 'infovihalilycareinc@gmail.com'
-  }),
-});
-```
-
-### Option 2: EmailJS
-
-1. Sign up at [emailjs.com](https://www.emailjs.com)
-2. Create email service and template
-3. Add API keys to environment variables
-4. Update forms with EmailJS SDK
-
-### Option 3: Netlify Forms (if hosting on Netlify)
-
-Add `netlify` attribute to your form tags:
-```html
-<form method="POST" data-netlify="true" netlify-honeypot="bot-field">
-```
-
-## 🚢 Deployment
-
-### Deploy to Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Import project in [Vercel](https://vercel.com)
-3. Deploy automatically on every push
-
-```bash
-vercel
-```
-
-### Deploy to Netlify
-
-1. Push your code to GitHub
-2. Import project in [Netlify](https://netlify.com)
-3. Build settings:
-   - Build command: `npm run build`
-   - Publish directory: `out`
-
-### Deploy to Cloudflare Pages
-
-1. Push your code to GitHub
-2. Import project in Cloudflare Pages
-3. Build settings:
-   - Build command: `npm run build`
-   - Output directory: `out`
-
-## 📄 Pages
-
-- **Home** (`/`) - Hero, highlights, services preview
-- **About Us** (`/about`) - Company story, mission, vision, values
-- **Services** (`/services`) - LTC, hospital, home care, emergency staffing
-- **Jobs** (`/jobs`) - Current openings and career opportunities
-- **Apply** (`/apply`) - Job application form
-- **Contact** (`/contact`) - Contact form and information
-- **Privacy** (`/privacy`) - Privacy policy
-
-## 🎨 Customization
-
-### Colors
-
-Edit `app/globals.css`:
-```css
-:root {
-  --primary-blue: #007BFF;
-  --primary-light: #4F9FF8;
-  /* ... */
-}
-```
-
-### Contact Information
-
-Update contact details in:
-- `components/Footer.tsx`
-- `app/contact/page.tsx`
-- `app/about/page.tsx`
-
-### Company Information
-
-Modify text content directly in component files.
-
-## 📝 Build Commands
-
-```bash
-# Development
-npm run dev
-
-# Production build (static export)
-npm run build
-
-# Preview production build
-npm start
-```
-
-## 🌐 Tech Stack
-
-- **Framework**: Next.js 14 (with static export)
-- **Styling**: Plain CSS with CSS variables
-- **Forms**: Formspree/EmailJS/Netlify Forms
-- **Hosting**: Vercel, Netlify, or Cloudflare Pages
-- **Deployment**: Free tier hosting
-
-## 📞 Support
-
-For questions or support, contact:
-- Email: infovihalilycareinc@gmail.com
-- Location: Brampton, Ontario
-
-## 📄 License
-
-© 2025 Viha Lily Care Inc. All rights reserved.
-
-## 🎯 Next Steps
-
-1. ✅ Install dependencies: `npm install`
-2. ✅ Test locally: `npm run dev`
-3. ⬜ Set up Formspree account and get Form ID
-4. ⬜ Update `YOUR_FORM_ID` in `app/apply/page.tsx` and `app/contact/page.tsx`
-5. ⬜ Deploy to Vercel/Netlify/Cloudflare Pages
-6. ⬜ Test all forms and links on deployed site
-7. ⬜ Add favicon and logo (optional)
-8. ⬜ Add custom domain (optional)
-
+## Troubleshooting
+- 500 on form submit (local)
+  - Cause: env vars not set. Fix: create `.env.local` with both URLs (see above), then restart `npm run dev`.
+- 404 for `/logo`
+  - Ensure `app/logo/CarE.png` exists; the route serves it at `/logo`.
+- Apps Script rejects request
+  - Confirm deployment is �Execute as: Me� and �Who has access: Anyone�.
+  - Make sure your script parses JSON in `doPost`.
