@@ -44,18 +44,24 @@ export async function POST(req: Request) {
       redirect: 'manual',
     });
     
-    // Detect auth redirect (misconfigured Apps Script access)
+    // Handle redirects: treat non-login redirects as success
     if (upstream.status >= 300 && upstream.status < 400) {
       const loc = upstream.headers.get('location') || '';
-      return NextResponse.json(
-        {
-          ok: false,
-          error: 'apps_script_auth_redirect',
-          message: 'Apps Script requires authentication. In Apps Script, set Execute as: Me and Who has access: Anyone, then redeploy to get a new /exec URL.',
-          location: loc,
-        },
-        { status: 401 }
-      );
+      const isLogin = /accounts\.google\.com|ServiceLogin/i.test(loc);
+      if (isLogin) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: 'apps_script_auth_redirect',
+            message:
+              'Apps Script requires authentication. In Apps Script, set Execute as: Me and Who has access: Anyone, then redeploy to get a new /exec URL.',
+            location: loc,
+          },
+          { status: 401 }
+        );
+      }
+      // Successful post that redirected (common with Apps Script web apps)
+      return NextResponse.json({ ok: true, redirected: true, location: loc });
     }
 
     const text = await upstream.text().catch(() => '');
