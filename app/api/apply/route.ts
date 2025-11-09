@@ -6,6 +6,16 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
+    // Basic anti-bot checks (honeypot + time-to-submit)
+    const hp = (data?.hp ?? '').toString().trim();
+    const t = Number(data?.t ?? 0);
+    if (hp) {
+      return NextResponse.json({ ok: false, error: 'bot_detected' }, { status: 400 });
+    }
+    if (!Number.isFinite(t) || t < 1500) {
+      return NextResponse.json({ ok: false, error: 'too_fast' }, { status: 400 });
+    }
+
     // Map client fields -> Apps Script expected fields
     const payload = {
       first_name: data.firstName ?? '',
@@ -48,4 +58,3 @@ export async function POST(req: Request) {
     );
   }
 }
-

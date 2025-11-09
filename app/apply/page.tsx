@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 
 export default function Apply() {
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,13 @@ export default function Apply() {
     message: '',
   });
 
+  // Simple anti-bot: honeypot + required checkbox + time-to-submit
+  const [botField, setBotField] = useState('');
+  const [humanCheck, setHumanCheck] = useState(false);
+  const [humanError, setHumanError] = useState(false);
+  const [startTime, setStartTime] = useState<number>(Date.now());
+  useEffect(() => { setStartTime(Date.now()); }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -27,6 +34,14 @@ export default function Apply() {
     setLoading(true);
     setStatus(null);
 
+    const elapsed = Date.now() - startTime;
+    if (!humanCheck) {
+      setLoading(false);
+      setHumanError(true);
+      setStatus({ type: 'error', message: 'Please confirm you are not a robot.' });
+      return;
+    }
+
     try {
       const response = await fetch('/api/apply', {
         method: 'POST',
@@ -34,6 +49,8 @@ export default function Apply() {
         body: JSON.stringify({
           ...formData,
           source: typeof window !== 'undefined' ? window.location.href : '',
+          hp: botField,
+          t: elapsed,
         }),
       });
 
@@ -54,11 +71,17 @@ export default function Apply() {
           message: '',
         });
 
+        setHumanCheck(false);
+        setHumanError(false);
+        setBotField('');
+        setStartTime(Date.now());
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const info = await response.json().catch(() => null as any);
         const details = info?.message || info?.body || info?.details || '';
         const statusText = info?.status || response.status;
+        if (response.status === 400) setHumanError(true);
         setStatus({
           type: 'error',
           message: `Failed to submit application (status ${statusText}). ${details ? String(details).slice(0, 300) : 'Please try again.'}`
@@ -216,6 +239,63 @@ export default function Apply() {
                 onChange={handleInputChange}
                 placeholder="Please paste your resume here which should include your experience, certifications, or any other relevant information."
               />
+            </div>
+
+            {/* Honeypot field (should remain empty) */}
+            <div style={{ position: 'absolute', left: '-10000px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                value={botField}
+                onChange={(e) => setBotField(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            {/* Pseudo reCAPTCHA-style box */}
+            <div className="form-group" style={{ marginTop: '0.5rem', marginBottom: '1rem' }}>
+              <div
+                role="group"
+                aria-label="Human verification"
+                style={{
+                  border: `1px solid ${humanError ? '#d93025' : 'rgba(0,0,0,0.15)'}`,
+                  borderRadius: 6,
+                  background: '#fff',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
+                  padding: '12px 14px',
+                  maxWidth: 390,
+                  display: 'grid',
+                  gridTemplateColumns: '24px 1fr 70px',
+                  alignItems: 'center',
+                  gap: 12,
+                }}
+              >
+                {humanError && (
+                  <div style={{ gridColumn: '1 / -1', color: '#d93025', fontSize: 12, marginBottom: 6 }}>
+                    Verification required. Check the checkbox.
+                  </div>
+                )}
+                <input
+                  aria-label="I am not a robot"
+                  type="checkbox"
+                  checked={humanCheck}
+                  onChange={(e) => { setHumanCheck(e.target.checked); if (e.target.checked) setHumanError(false); }}
+                  required
+                  style={{ width: 20, height: 20 }}
+                />
+                <div style={{ fontSize: 14, color: 'var(--text, #111827)' }}>
+                  I'm not a robot
+                </div>
+                <div style={{ justifySelf: 'end', textAlign: 'right' }}>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#4285F4', color: '#fff', fontSize: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>r</div>
+                  <div style={{ fontSize: 10, color: '#6b7280' }}>reCAPTCHA
+                    <div>Privacy • Terms</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <button

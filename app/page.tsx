@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -6,6 +7,9 @@ export default function Home() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+            <Image src="/logo" alt="Viha Lily Care Inc. logo" width={96} height={96} priority style={{ borderRadius: 12 }} />
+          </div>
           <h1>Viha Lily Care Inc.</h1>
           <p>Compassionate Staffing. Professional Care.</p>
           <div className="hero-buttons">

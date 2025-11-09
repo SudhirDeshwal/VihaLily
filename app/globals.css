@@ -61,9 +61,12 @@ nav {
   gap: 0.5rem;
 }
 
-.logo::before {
-  content: '🌿';
-  font-size: 1.75rem;
+.logo-img {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .nav-links {
@@ -516,4 +519,5 @@ footer {
     padding: 2rem 1.5rem;
   }
 }
+
 

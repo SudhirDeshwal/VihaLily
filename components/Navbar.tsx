@@ -1,11 +1,20 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
     <nav>
       <div className="nav-container">
         <Link href="/" className="logo">
-          Viha Lily Care Inc.
+          <Image
+            src="/logo"
+            alt="Viha Lily Care Inc. logo"
+            width={28}
+            height={28}
+            className="logo-img"
+            priority
+          />
+          <span>Viha Lily Care Inc.</span>
         </Link>
         <ul className="nav-links">
           <li><Link href="/">Home</Link></li>
