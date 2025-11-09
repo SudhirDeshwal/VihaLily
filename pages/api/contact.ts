@@ -1,8 +1,8 @@
 // @ts-nocheck
-// api/contact.ts — Vercel Serverless Function (works even with static export)
+// pages/api/contact.ts — Next.js Pages Router API (robust CORS + JSON/form)
 
 const corsHeaders: Record<string, string> = {
-  'Access-Control-Allow-Origin': '*', // change to your domain if needed
+  'Access-Control-Allow-Origin': '*', // set to your domain if needed
   'Access-Control-Allow-Methods': 'POST,OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
@@ -19,6 +19,7 @@ export default async function handler(req: any, res: any) {
   }
 
   if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST,OPTIONS');
     return res.status(405).end('Method Not Allowed');
   }
 
