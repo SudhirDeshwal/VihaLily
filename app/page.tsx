@@ -315,7 +315,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <Link href="/services" className="service-link">
-                    Explore coverage ->
+                    Explore coverage &rarr;
                   </Link>
                 </div>
               </article>
