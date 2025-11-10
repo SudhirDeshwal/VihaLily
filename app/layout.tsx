@@ -5,7 +5,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Viha Lily Care Inc. - Professional Nursing Staffing Agency',
-  description: 'Compassionate Staffing. Professional Care. Trusted healthcare staffing solutions in Ontario.',
+  description: 'Compassionate Staffing. Professional Care. Trusted healthcare staffing solutions for every care setting.',
   icons: {
     icon: '/logo',
     shortcut: '/logo',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Viha Lily Care Inc. - Professional Nursing Staffing Agency',
-    description: 'Compassionate Staffing. Professional Care. Trusted healthcare staffing solutions in Ontario.',
+    description: 'Compassionate Staffing. Professional Care. Trusted healthcare staffing solutions for every care setting.',
     images: ['/logo'],
   },
 };

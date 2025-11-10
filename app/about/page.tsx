@@ -10,18 +10,17 @@ export default function About() {
             Our Story
           </h2>
           <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-medium)', marginBottom: '1.5rem' }}>
-            Founded in Ontario, Viha Lily Care Inc. was established with a singular mission: 
-            to bridge the gap between skilled healthcare professionals and facilities in need 
-            of qualified staff.
+            Viha Lily Care Inc. was established with a singular mission: to bridge the gap between 
+            skilled healthcare professionals and facilities in need of qualified staff.
           </p>
           <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-medium)', marginBottom: '1.5rem' }}>
             We serve long-term care facilities, hospitals, retirement homes, and community 
-            care organizations across Ontario, providing reliable, compassionate, and 
+            care organizations across the regions we operate, providing reliable, compassionate, and 
             professional nursing staff whenever and wherever they're needed.
           </p>
           <p style={{ fontSize: '1.125rem', lineHeight: '1.8', color: 'var(--text-medium)' }}>
             Our commitment to excellence and personalized service has made us a trusted partner 
-            in Ontario's healthcare community.
+            in healthcare communities far and wide.
           </p>
         </div>
 
@@ -61,7 +60,7 @@ export default function About() {
             background: 'var(--bg-light)',
             borderRadius: '16px'
           }}>
-            To be Ontario's leading healthcare staffing agency, recognized for excellence in 
+            To be the leading healthcare staffing agency, recognized for excellence in 
             service, reliability, and the professional development of healthcare workers.
           </p>
         </div>

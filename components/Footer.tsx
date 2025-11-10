@@ -9,7 +9,7 @@ export default function Footer() {
             <h3>Viha Lily Care Inc.</h3>
             <p>Compassionate Staffing. Professional Care.</p>
             <p style={{ marginTop: '1rem' }}>
-              Your trusted partner for quality nursing and healthcare staffing solutions in Ontario.
+              Your trusted partner for quality nursing and healthcare staffing solutions wherever care is needed.
             </p>
           </div>
           

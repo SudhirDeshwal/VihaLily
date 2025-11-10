@@ -5,7 +5,7 @@ export default function Services() {
     {
       icon: '🏥',
       title: 'Long-Term Care Staffing',
-      description: 'Experienced and qualified staff for nursing homes, retirement communities, and long-term care facilities across Ontario.',
+      description: 'Experienced and qualified staff for nursing homes, retirement communities, and long-term care facilities wherever support is needed.',
       details: [
         'Registered Nurses (RN)',
         'Registered Practical Nurses (RPN)',
@@ -61,7 +61,7 @@ export default function Services() {
       <div className="container">
         <h1 className="section-title">Our Services</h1>
         <p className="section-subtitle">
-          Comprehensive healthcare staffing solutions for facilities across Ontario
+          Comprehensive healthcare staffing solutions for facilities in every community we serve
         </p>
 
         {services.map((service, index) => (

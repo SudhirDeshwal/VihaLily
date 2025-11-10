@@ -23,17 +23,54 @@ export default function Navbar() {
 
   return (
     <header className="site-header">
+      <div className="nav-ribbon" role="status">
+        <p>
+          <span className="nav-ribbon__item">
+            <span className="nav-ribbon__icon" aria-hidden="true">
+              24
+            </span>
+            Available 24/7 for hospitals, long-term care, and in-home support
+          </span>
+          <span className="nav-ribbon__divider" aria-hidden="true" />
+          <span className="nav-ribbon__item">
+            <span className="nav-ribbon__icon" aria-hidden="true">
+              📞
+            </span>
+            <a href="tel:+16476419660" className="nav-ribbon__link">
+              (647) 641-9660
+            </a>
+          </span>
+          <span className="nav-ribbon__divider" aria-hidden="true" />
+          <span className="nav-ribbon__item">
+            <span className="nav-ribbon__icon" aria-hidden="true">
+              ✉
+            </span>
+            <a href="mailto:info@vihalilycare.ca" className="nav-ribbon__link">
+              info@vihalilycare.ca
+            </a>
+          </span>
+        </p>
+      </div>
+
       <div className="nav-container">
-        <Link href="/" className="logo-only" aria-label="Viha Lily Care Inc." onClick={closeMenu}>
+        <Link
+          href="/"
+          className="logo-only"
+          aria-label="Viha Lily Care Inc."
+          onClick={closeMenu}
+        >
           <Image
             src={Logo}
             alt="Viha Lily Care Inc."
-            width={72}
-            height={72}
+            width={68}
+            height={68}
             className="logo-img"
             priority
           />
-          <span className="sr-only">Viha Lily Care Inc.</span>
+          <span className="logo-wordmark">
+            <strong>Viha Lily Care Inc.</strong>
+            <span>Modern healthcare staffing</span>
+          </span>
         </Link>
 
         <button
@@ -58,9 +95,14 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
-            <li>
+            <li className="nav-links__cta">
               <Link href="/contact" className="btn btn-primary" onClick={closeMenu}>
                 Hire Our Staff
+              </Link>
+            </li>
+            <li className="nav-links__cta nav-links__cta--secondary">
+              <Link href="/apply" className="btn btn-outline" onClick={closeMenu}>
+                Join Our Team
               </Link>
             </li>
           </ul>

@@ -2,7 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   // REMOVE: output: 'export',
-  images: { unoptimized: true },
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
