@@ -20,11 +20,16 @@ Simple Next.js site for a healthcare staffing agency, with contact and job appli
 ## Environment Variables
 Create `.env.local` in the project root:
 ```
-CONTACT_APPS_SCRIPT_URL=https://script.google.com/.../exec
+CONTACT_EMAIL_APPS_SCRIPT_URL=https://script.google.com/.../exec
 APPLY_APPS_SCRIPT_URL=https://script.google.com/.../exec
+APPLY_EMAIL_APPS_SCRIPT_URL=https://script.google.com/.../exec
+# Optional legacy name still supported:
+# CONTACT_APPS_SCRIPT_URL=https://script.google.com/.../exec
 ```
 Notes
 - Both routes require these values. Missing values cause 500s from the API when you submit a form.
+- CONTACT_EMAIL_APPS_SCRIPT_URL is the canonical variable; the old name remains supported for backwards compatibility.
+- APPLY_EMAIL_APPS_SCRIPT_URL lets you send job submissions to a second Apps Script (e.g., email notifications) while APPLY_APPS_SCRIPT_URL continues feeding your sheet.
 - Use the public `/exec` URLs from �Manage deployments� in Apps Script.
 - In Apps Script, set: Execute as �Me�, Who has access �Anyone�.
 
@@ -37,8 +42,9 @@ Notes
 1) Push code to GitHub (repo: `SudhirDeshwal/VihaLily`).
 2) In Vercel ? New Project ? Import the repo (framework auto-detected).
 3) Add env vars in Vercel Project Settings ? Environment Variables:
-   - `CONTACT_APPS_SCRIPT_URL` = your contact `/exec` URL
+   - `CONTACT_EMAIL_APPS_SCRIPT_URL` = your contact `/exec` URL (or `CONTACT_APPS_SCRIPT_URL` for legacy setups)
    - `APPLY_APPS_SCRIPT_URL` = your apply `/exec` URL
+   - `APPLY_EMAIL_APPS_SCRIPT_URL` = optional apply-form email `/exec` URL
    - Optional: `NEXT_PUBLIC_SITE_URL` = the public site URL
 4) Deploy. Future pushes auto-deploy.
 

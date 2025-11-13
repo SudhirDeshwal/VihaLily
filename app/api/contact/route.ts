@@ -1,15 +1,73 @@
 import { NextResponse } from 'next/server';
 
+const corsHeaders: Record<string, string> = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 type TargetKind = 'sheet' | 'email';
 type Target = { kind: TargetKind; url: string };
 
-const sheetEndpoint = (process.env.APPLY_APPS_SCRIPT_URL || '').trim();
-const emailEndpoint = (process.env.APPLY_EMAIL_APPS_SCRIPT_URL || '').trim();
+const sheetEndpoint = (process.env.CONTACT_APPS_SCRIPT_URL || '').trim();
+const emailEndpoint = (process.env.CONTACT_EMAIL_APPS_SCRIPT_URL || '').trim();
 
 const targets: Target[] = [];
 if (sheetEndpoint) targets.push({ kind: 'sheet', url: sheetEndpoint });
-if (emailEndpoint && emailEndpoint !== sheetEndpoint) {
+if (emailEndpoint && emailEndpoint !== sheetEndpoint)
   targets.push({ kind: 'email', url: emailEndpoint });
+
+function withCors(response: NextResponse) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+  return response;
+}
+
+function json(data: any, init?: ResponseInit) {
+  return withCors(NextResponse.json(data, init));
+}
+
+export function OPTIONS() {
+  return withCors(new NextResponse(null, { status: 204 }));
+}
+
+async function parseRequestBody(req: Request): Promise<Record<string, any>> {
+  const contentType = req.headers.get('content-type')?.toLowerCase() ?? '';
+
+  if (contentType.includes('application/json')) {
+    try {
+      return await req.json();
+    } catch {
+      return {};
+    }
+  }
+
+  if (contentType.includes('application/x-www-form-urlencoded')) {
+    const raw = await req.text();
+    const params = new URLSearchParams(raw);
+    const out: Record<string, string> = {};
+    params.forEach((value, key) => {
+      out[key] = value;
+    });
+    return out;
+  }
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await req.formData();
+    const out: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      out[key] = typeof value === 'string' ? value : value.name;
+    });
+    return out;
+  }
+
+  const text = await req.text();
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    return {};
+  }
 }
 
 type ForwardResult = {
@@ -25,48 +83,21 @@ type ForwardResult = {
   message?: string;
 };
 
-const looksLikeGoogleAuth = (html: string) => {
+function looksLikeGoogleAuth(html: string) {
   const lower = html.toLowerCase();
   return (
+    lower.includes('docs.google.com') ||
     lower.includes('accounts.google.com') ||
-    lower.includes('serviceLogin'.toLowerCase()) ||
-    lower.includes('docs.google.com')
+    lower.includes('sign in')
   );
-};
+}
 
-const buildSheetPayload = (data: Record<string, any>) => ({
-  first_name: data.firstName ?? '',
-  last_name: data.lastName ?? '',
-  email: data.email ?? '',
-  phone: data.phone ?? '',
-  position: data.role ?? '',
-  experience_years: data.experience ?? '',
-  availability: data.availability ?? '',
-  additional_info: data.message ?? '',
-  source: data.source ?? '',
-});
-
-const buildEmailPayload = (data: Record<string, any>) => ({
-  firstName: data.firstName ?? '',
-  lastName: data.lastName ?? '',
-  email: data.email ?? '',
-  phone: data.phone ?? '',
-  position: data.role ?? '',
-  positionOfInterest: data.role ?? '',
-  experience: data.experience ?? '',
-  yearsOfExperience: data.experience ?? '',
-  availability: data.availability ?? '',
-  additionalInfo: data.message ?? '',
-  resume: data.message ?? '',
-  source: data.source ?? '',
-});
-
-async function forward(target: Target, payload: Record<string, any>): Promise<ForwardResult> {
+async function forwardToAppsScript(target: Target, payload: Record<string, any>): Promise<ForwardResult> {
   try {
     const upstream = await fetch(target.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload || {}),
       redirect: 'manual',
     });
 
@@ -83,7 +114,7 @@ async function forward(target: Target, payload: Record<string, any>): Promise<Fo
           location,
           error: 'apps_script_auth_redirect',
           message:
-            'Apps Script is redirecting to a Google login. Redeploy the Web App with Execute as “Me” and Who has access “Anyone”.',
+            'Google Apps Script is redirecting to a login screen. Set Execute as "Me" and Who has access "Anyone" and redeploy the /exec URL.',
         };
       }
       return {
@@ -99,7 +130,8 @@ async function forward(target: Target, payload: Record<string, any>): Promise<Fo
 
     const text = await upstream.text().catch(() => '');
     if (!upstream.ok) {
-      const forbidden = upstream.status === 403 && text && looksLikeGoogleAuth(text);
+      const forbidden =
+        upstream.status === 403 && text && looksLikeGoogleAuth(text);
       return {
         kind: target.kind,
         url: target.url,
@@ -108,7 +140,7 @@ async function forward(target: Target, payload: Record<string, any>): Promise<Fo
         body: text,
         error: forbidden ? 'apps_script_forbidden' : 'apps_script_http_error',
         message: forbidden
-          ? 'Google rejected the request. Ensure the Apps Script deployment is set to Anyone and redeploy to refresh the /exec URL.'
+          ? 'Google rejected the request. Confirm the Apps Script deployment is set to Anyone and redeploy to refresh the /exec URL.'
           : `Apps Script responded with status ${upstream.status}.`,
       };
     }
@@ -119,6 +151,7 @@ async function forward(target: Target, payload: Record<string, any>): Promise<Fo
     } catch {
       parsed = null;
     }
+
     const ok =
       parsed?.success === true ||
       parsed?.result === 'success' ||
@@ -147,48 +180,41 @@ async function forward(target: Target, payload: Record<string, any>): Promise<Fo
 
 export async function POST(req: Request) {
   if (!targets.length) {
-    return NextResponse.json(
+    return json(
       {
         ok: false,
-        error: 'apply_apps_script_url_not_set',
+        error: 'contact_apps_script_url_not_set',
         message:
-          'Set APPLY_APPS_SCRIPT_URL (and optionally APPLY_EMAIL_APPS_SCRIPT_URL) in your environment.',
+          'Set CONTACT_EMAIL_APPS_SCRIPT_URL and/or CONTACT_APPS_SCRIPT_URL in your environment.',
       },
       { status: 500 },
     );
   }
 
   try {
-    let data: Record<string, any> = {};
-    try {
-      data = await req.json();
-    } catch {
-      data = {};
-    }
+    const data = await parseRequestBody(req);
 
     const hp = (data?.hp ?? '').toString().trim();
     const t = Number(data?.t ?? 0);
     if (hp) {
-      return NextResponse.json({ ok: false, error: 'bot_detected' }, { status: 400 });
+      return json({ ok: false, error: 'bot_detected' }, { status: 400 });
     }
     if (!Number.isFinite(t) || t < 1500) {
-      return NextResponse.json({ ok: false, error: 'too_fast' }, { status: 400 });
+      return json({ ok: false, error: 'too_fast' }, { status: 400 });
     }
 
-    const sheetPayload = buildSheetPayload(data);
-    const emailPayload = buildEmailPayload(data);
+    const { hp: _hp, t: _t, ...clean } = data || {};
 
     const results: ForwardResult[] = [];
     for (const target of targets) {
-      const payload = target.kind === 'sheet' ? sheetPayload : emailPayload;
-      // Sequential to guarantee the sheet write happens even if email fails.
-      const outcome = await forward(target, payload);
+      // Send sequentially so we preserve ordering (sheet tracking first, email second).
+      const outcome = await forwardToAppsScript(target, clean);
       results.push(outcome);
     }
 
     const allOk = results.every((r) => r.ok);
     if (allOk) {
-      return NextResponse.json({
+      return json({
         ok: true,
         results,
         body: results.find((r) => r.body)?.body,
@@ -197,7 +223,7 @@ export async function POST(req: Request) {
     }
 
     const firstError = results.find((r) => !r.ok)!;
-    return NextResponse.json(
+    return json(
       {
         ok: false,
         results,
@@ -208,9 +234,13 @@ export async function POST(req: Request) {
       },
       { status: firstError.status || 502 },
     );
-  } catch (err) {
-    return NextResponse.json(
-      { ok: false, error: 'proxy_error', details: (err as Error)?.message },
+  } catch (error: any) {
+    return json(
+      {
+        ok: false,
+        error: 'proxy_error',
+        details: error?.message || 'Unexpected error',
+      },
       { status: 500 },
     );
   }
