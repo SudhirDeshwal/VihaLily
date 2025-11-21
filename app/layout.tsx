@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   title: 'Viha Lily Care Inc. - Professional Nursing Staffing Agency',
   description: 'Compassionate Staffing. Professional Care. Trusted healthcare staffing solutions for every care setting.',
   icons: {
-    icon: '/logo',
-    shortcut: '/logo',
-    apple: '/logo',
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
   openGraph: {
     title: 'Viha Lily Care Inc. - Professional Nursing Staffing Agency',
@@ -33,4 +33,6 @@ export default function RootLayout({
     </html>
   );
 }
+
+
 
