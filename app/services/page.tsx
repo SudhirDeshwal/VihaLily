@@ -1,123 +1,146 @@
 import Link from 'next/link';
 
-export default function Services() {
-  const services = [
-    {
-      icon: '🏥',
-      title: 'Long-Term Care Staffing',
-      description: 'Experienced and qualified staff for nursing homes, retirement communities, and long-term care facilities wherever support is needed.',
-      details: [
-        'Registered Nurses (RN)',
-        'Registered Practical Nurses (RPN)',
-        'Personal Support Workers (PSW)',
-        '24/7 staffing availability',
-        'Weekend and holiday coverage',
-        'Ongoing training and support'
-      ]
-    },
-    {
-      icon: '🧑‍⚕️',
-      title: 'Hospital Support Staff',
-      description: 'Qualified healthcare professionals for hospital units, emergency departments, intensive care, and specialty departments.',
-      details: [
-        'Critical care nurses',
-        'Medical-surgical staff',
-        'Emergency department coverage',
-        'Operating room support',
-        'Float pool staffing',
-        'Per-diem and contract options'
-      ]
-    },
-    {
-      icon: '🏡',
-      title: 'Home & Community Care',
-      description: 'Compassionate in-home care services for patients who need assistance in their homes and community settings.',
-      details: [
-        'Personal support services',
-        'Medication management',
-        'Post-surgical care',
-        'Chronic disease management',
-        'Companion care',
-        'Respite services'
-      ]
-    },
-    {
-      icon: '⏱️',
-      title: 'Emergency Coverage / Last-Minute Staffing',
-      description: 'Rapid response team for unexpected staffing needs, sick calls, and urgent coverage requirements.',
-      details: [
-        'Same-day availability',
-        'On-call nursing staff',
-        'Backup coverage planning',
-        'Flexible scheduling',
-        'Quick response times',
-        'Reliable professionals'
-      ]
-    }
-  ];
+type Service = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  details: string[];
+};
 
+const services: Service[] = [
+  {
+    id: 'home-care',
+    icon: 'HC',
+    title: 'Home care for older adults',
+    description: 'Personal care, companionship, and respite that keep loved ones safe and independent at home.',
+    details: [
+      'Personal care, bathing, grooming, and dressing support',
+      'Medication reminders and wellness check-ins',
+      'Mobility support, transfers, and fall prevention',
+      'Meal prep, light housekeeping, and errands',
+      'Companionship visits and cognitive engagement',
+      'Overnight respite and caregiver relief',
+    ],
+  },
+  {
+    id: 'rn-rpn',
+    icon: 'RN',
+    title: 'RN & RPN staffing services',
+    description: 'Hospital, community, and specialty nurses matched to acuity and culture.',
+    details: [
+      '24/7 staffing desk and rapid deployment for urgent needs',
+      'Emergency coverage and last-minute staffing bench',
+      'ICU, ER, OR, medicine, and transitional care experience',
+      'Charge nurse, leadership, and mentoring support',
+      'Permanent, temporary, or casual nurses aligned to your roster',
+      'Onboarding packets, EMR-ready documentation, and full compliance',
+    ],
+  },
+  {
+    id: 'psw',
+    icon: 'PS',
+    title: 'PSW & personal care teams',
+    description: 'Relationship-driven PSWs, caregivers, and companions for homes, retirement, and LTC.',
+    details: [
+      'ADL and personal care, feeding, and mobility assistance',
+      'Dementia, palliative, and behaviour support',
+      'Night, weekend, and respite coverage including live-in options',
+      'Consistent staff for continuity and trust with families',
+      'Family updates and shift notes after every visit',
+      'Wellness, safety, and infection-prevention practices',
+    ],
+  },
+  {
+    id: 'retirement',
+    icon: 'LT',
+    title: 'Retirement & long-term care solutions',
+    description: 'Stable, compassionate staffing for retirement residences and long-term care homes.',
+    details: [
+      'Retirement home and long-term care staffing solutions',
+      'Permanent, temporary, or casual coverage based on census',
+      'Block booking to stabilize wings and households',
+      'Restorative, wound, and medication management programs',
+      'Bilingual and culturally aligned clinicians and caregivers',
+      'Leadership support, coaching, and family communication',
+    ],
+  },
+  {
+    id: 'staffing-models',
+    icon: '24',
+    title: '24/7 coverage and surge response',
+    description: 'An always-on staffing desk for planned surges and unexpected call-outs.',
+    details: [
+      'Rapid deployment bench for call-outs and sick coverage',
+      'Emergency coverage / last-minute staffing with live updates',
+      'Multi-site scheduling, float pools, and block booking',
+      'Custom reporting and shift feedback loops for clients',
+      'Onboarding packets tailored to your site protocols',
+      'Escalation pathways and leadership briefings every step of the way',
+    ],
+  },
+];
+
+export default function Services() {
   return (
     <section className="section">
       <div className="container">
+        <p className="eyebrow">Staffing built around people</p>
         <h1 className="section-title">Our Services</h1>
         <p className="section-subtitle">
-          Comprehensive healthcare staffing solutions for facilities in every community we serve
+          RN, RPN, PSW, and allied teams customized to your census, acuity, and culture—whether you need 24/7 coverage,
+          emergency deployment, or a permanent roster.
         </p>
 
-        {services.map((service, index) => (
-          <div key={index} className="service-detail">
-            <div style={{ display: 'flex', alignItems: 'start', gap: '2rem', marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '4rem', lineHeight: 1 }}>{service.icon}</div>
+        {services.map((service) => (
+          <div key={service.id} id={service.id} className="service-detail">
+            <div className="service-detail__header">
+              <span className="service-chip" aria-hidden="true">
+                {service.icon}
+              </span>
               <div>
                 <h2>{service.title}</h2>
                 <p>{service.description}</p>
               </div>
             </div>
-            
-            <h3 style={{ color: 'var(--text-dark)', marginBottom: '1rem' }}>What We Offer:</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-              {service.details.map((detail, idx) => (
-                <div key={idx} style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  color: 'var(--text-medium)'
-                }}>
-                  <span style={{ color: 'var(--primary-blue)' }}>✓</span>
+
+            <p className="service-detail__eyebrow">What we deliver</p>
+            <ul className="service-detail__list">
+              {service.details.map((detail) => (
+                <li key={detail}>
+                  <span className="service-detail__bullet" aria-hidden="true" />
                   <span>{detail}</span>
-                </div>
+                </li>
               ))}
-            </div>
-            
+            </ul>
+
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
               <Link href="/contact" className="btn btn-primary">
-                Hire Now
+                Hire now
               </Link>
             </div>
           </div>
         ))}
 
-        {/* Call to Action */}
-        <div style={{ 
-          marginTop: '4rem', 
-          padding: '3rem', 
-          background: 'var(--bg-blue-light)', 
-          borderRadius: '16px',
-          textAlign: 'center'
-        }}>
-          <h2 style={{ color: 'var(--primary-blue)', marginBottom: '1rem' }}>
-            Need Staffing Solutions?
-          </h2>
+        <div
+          style={{
+            marginTop: '4rem',
+            padding: '3rem',
+            background: 'var(--bg-blue-light)',
+            borderRadius: '16px',
+            textAlign: 'center',
+          }}
+        >
+          <h2 style={{ color: 'var(--primary-blue)', marginBottom: '1rem' }}>Need staffing solutions?</h2>
           <p style={{ fontSize: '1.125rem', color: 'var(--text-medium)', marginBottom: '2rem' }}>
-            Contact us to discuss your staffing needs. We'll work with you to find the perfect 
-            healthcare professionals for your facility.
+            Tell us about your 24/7 coverage goals, emergency coverage needs, or permanent roster plans and we will
+            build a staffing model that fits your timelines.
           </p>
           <Link href="/contact" className="btn btn-primary">
-            Get in Touch
+            Get in touch
           </Link>
         </div>
       </div>
     </section>
   );
 }
-

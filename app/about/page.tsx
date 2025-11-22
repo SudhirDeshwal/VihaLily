@@ -25,7 +25,7 @@ export default function About() {
         </div>
 
         {/* Mission, Vision, Values */}
-        <div style={{ maxWidth: '900px', margin: '0 auto 4rem' }}>
+        <div id="mission" style={{ maxWidth: '900px', margin: '0 auto 4rem' }}>
           <h2 style={{ color: 'var(--primary-blue)', marginBottom: '2rem', fontSize: '2rem', textAlign: 'center' }}>
             Our Mission
           </h2>
@@ -62,6 +62,30 @@ export default function About() {
           }}>
             To be the leading healthcare staffing agency, recognized for excellence in 
             service, reliability, and the professional development of healthcare workers.
+          </p>
+        </div>
+
+        <div
+          id="quality"
+          style={{
+            maxWidth: '980px',
+            margin: '0 auto 4rem',
+            background: 'var(--bg-light)',
+            borderRadius: '16px',
+            padding: '2.5rem',
+          }}
+        >
+          <h2 style={{ color: 'var(--primary-blue)', marginBottom: '1.25rem', fontSize: '1.75rem' }}>
+            Quality & Compliance
+          </h2>
+          <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'var(--text-medium)', marginBottom: '1rem' }}>
+            Every clinician and caregiver completes full background screening, credential verification, vaccination
+            tracking, and site-specific orientation. We maintain digital credential vaults, WSIB coverage, and
+            standardized handbooks so teams arrive prepared for your protocols.
+          </p>
+          <p style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'var(--text-medium)' }}>
+            Our 24/7 staffing desk pairs compliance with real-time support&mdash;from last-minute replacements to
+            shift feedback loops that keep leadership and families informed.
           </p>
         </div>
 

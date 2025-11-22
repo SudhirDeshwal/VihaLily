@@ -15,8 +15,8 @@ const heroImages: Array<{ src: string; alt: string; width: number; height: numbe
     height: 900,
   },
   {
-    src: '/pics/Gemini_Generated_Image_k5m59qk5m59qk5m5.png',
-    alt: 'Nurse providing an in-home visit with family present',
+    src: '/pics/Gemini_Generated_Image_n5jha7n5jha7n5jh.png',
+    alt: 'ICU nurse coordinating monitors and infusion pumps',
     width: 720,
     height: 900,
   },
