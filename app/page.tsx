@@ -1,24 +1,45 @@
+/**
+ * Animated home experience for Viha Lily Care.
+ * Adds scroll-triggered reveals and ambient hero motion without external dependencies.
+ */
+'use client';
+
+import { useEffect, useState } from 'react';
+import type { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const heroImages: Array<{ src: string; alt: string; width: number; height: number }> = [
+import heroImageCommand from './pics/Gemini_Generated_Image_rvmwtnrvmwtnrvmw.png';
+import heroImageSupport from './pics/Gemini_Generated_Image_rvmwtnrvmwtnrvmw (1).png';
+import heroImageICU from './pics/Gemini_Generated_Image_sx518tsx518tsx51.png';
+
+import serviceHospital from './pics/Gemini_Generated_Image_5w7bch5w7bch5w7b.png';
+import serviceLTC from './pics/Gemini_Generated_Image_8ww05q8ww05q8ww0.png';
+import serviceHome from './pics/Gemini_Generated_Image_9vwj4l9vwj4l9vwj.png';
+
+import talentRNImg from './pics/Gemini_Generated_Image_lpkbq0lpkbq0lpkb.png';
+import talentRPNImg from './pics/Gemini_Generated_Image_ohkjjxohkjjxohkj.png';
+import talentPSWImg from './pics/Gemini_Generated_Image_1kb3ja1kb3ja1kb3.png';
+import talentAlliedImg from './pics/Gemini_Generated_Image_wsowawwsowawwsow.png';
+
+const heroPills = [
+  { label: 'Rapid deployment', meta: 'Average fill in 24 hours' },
+  { label: 'Clinical QA', meta: 'Screened by nurse educators' },
+  { label: 'Live shift visibility', meta: 'Family-ready updates' },
+];
+
+const heroImages: Array<{ src: StaticImageData; alt: string }> = [
   {
-    src: '/pics/Gemini_Generated_Image_1bastu1bastu1bas.png',
-    alt: 'Hospital RN team reviewing patient vitals',
-    width: 900,
-    height: 600,
+    src: heroImageCommand,
+    alt: 'ICU and ER nurses coordinating patient vitals at the unit',
   },
   {
-    src: '/pics/Gemini_Generated_Image_rvpn9srvpn9srvpn.png',
-    alt: 'Personal support worker with an elder resident',
-    width: 720,
-    height: 900,
+    src: heroImageSupport,
+    alt: 'Hospital command team monitoring live census and acuity',
   },
   {
-    src: '/pics/Gemini_Generated_Image_n5jha7n5jha7n5jh.png',
-    alt: 'ICU nurse coordinating monitors and infusion pumps',
-    width: 720,
-    height: 900,
+    src: heroImageICU,
+    alt: 'Care team walking together through a hospital corridor',
   },
 ];
 
@@ -59,33 +80,25 @@ const serviceShowcase: Array<{
   title: string;
   description: string;
   bullets: string[];
-  image: string;
-  width: number;
-  height: number;
+  image: StaticImageData;
 }> = [
   {
     title: 'Hospital + acute units',
     description: 'Critical care, medicine, ER, and perioperative nurses with adaptable contracts.',
     bullets: ['Float pools and surge teams', 'RN, RPN, and specialty pairings', 'Night and weekend coverage'],
-    image: '/pics/Gemini_Generated_Image_5w7bch5w7bch5w7b.png',
-    width: 1200,
-    height: 800,
+    image: serviceHospital,
   },
   {
     title: 'Long-term and retirement',
     description: 'Warm, continuity-focused staffing for resident-centred care.',
     bullets: ['Medication and wound care experts', 'Behavioural support PSWs', 'Consistent family updates'],
-    image: '/pics/Gemini_Generated_Image_8ww05q8ww05q8ww0.png',
-    width: 1200,
-    height: 800,
+    image: serviceLTC,
   },
   {
     title: 'Home and community',
     description: 'Compassionate in-home clinicians for transitional, respite, and palliative journeys.',
     bullets: ['RN care coordination', 'Personal care and ADL support', 'Chronic and post-op programs'],
-    image: '/pics/Gemini_Generated_Image_9vwj4l9vwj4l9vwj.png',
-    width: 1200,
-    height: 800,
+    image: serviceHome,
   },
 ];
 
@@ -111,41 +124,31 @@ const talentSpotlight: Array<{
   title: string;
   description: string;
   tags: string[];
-  image: string;
-  width: number;
-  height: number;
+  image: StaticImageData;
 }> = [
   {
     title: 'Registered Nurses (RN)',
     description: 'ICU, ER, medicine, perioperative, and leadership-ready professionals for complex deployments.',
     tags: ['ICU and ER', 'Med-surg', 'Charge support'],
-    image: '/pics/Gemini_Generated_Image_lpkbq0lpkbq0lpkb.png',
-    width: 900,
-    height: 620,
+    image: talentRNImg,
   },
   {
     title: 'Registered Practical Nurses (RPN)',
     description: 'Versatile nurses who bridge acute, rehab, and community programs with consistent bedside care.',
     tags: ['Rehab', 'Transitional care', 'Vaccination clinics'],
-    image: '/pics/Gemini_Generated_Image_ohkjjxohkjjxohkj.png',
-    width: 900,
-    height: 620,
+    image: talentRPNImg,
   },
   {
     title: 'Personal Support Workers (PSW)',
     description: 'Relationship-driven caregivers for ADLs, dementia support, respite care, and family coaching.',
     tags: ['Memory care', 'Respite', 'Palliative'],
-    image: '/pics/Gemini_Generated_Image_1kb3ja1kb3ja1kb3.png',
-    width: 900,
-    height: 620,
+    image: talentPSWImg,
   },
   {
     title: 'Allied, PCA, and Dietary',
     description: 'Patient care aides, recreation, therapy, dietary teams, medical delivery and cleaners who keep every shift moving.',
     tags: ['Patient care aides', 'Recreation therapy', 'Dietary services'],
-    image: '/pics/Gemini_Generated_Image_wsowawwsowawwsow.png',
-    width: 900,
-    height: 620,
+    image: talentAlliedImg,
   },
 ];
 
@@ -210,11 +213,48 @@ const iconMap: Record<string, JSX.Element> = {
 };
 
 export default function Home() {
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.scroll-reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4800);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
     <>
       <section className="hero hero--immersive">
+        <div className="hero-ambient" aria-hidden="true">
+          <span className="orb orb--one" />
+          <span className="orb orb--two" />
+          <span className="orb orb--three" />
+        </div>
+
         <div className="container hero-grid">
-          <div className="hero-copy">
+          <div className="hero-copy scroll-reveal" style={{ transitionDelay: '0.05s' }}>
             <p className="eyebrow">Healthcare staffing network</p>
             <h1>
               Hire RN, RPN, PSW, and allied teams
@@ -232,35 +272,83 @@ export default function Home() {
                 Join the network
               </Link>
             </div>
-            <ul className="hero-stats">
-              {heroStats.map((stat) => (
-                <li key={stat.label}>
-                  <strong>{stat.value}</strong>
-                  <span>{stat.label}</span>
-                </li>
-              ))}
-            </ul>
+
+            <div className="hero-badges">
+              <ul className="hero-stats">
+                {heroStats.map((stat, index) => (
+                  <li
+                    key={stat.label}
+                    className="scroll-reveal"
+                    style={{ transitionDelay: `${index * 0.08 + 0.12}s` }}
+                  >
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <ul className="hero-pillstrip scroll-reveal" style={{ transitionDelay: '0.18s' }}>
+                {heroPills.map((pill) => (
+                  <li key={pill.label} className="hero-pill">
+                    <span>{pill.label}</span>
+                    <small>{pill.meta}</small>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          <div className="hero-media" aria-hidden="true">
-            <div className="hero-mosaic">
+          <div className="hero-media scroll-reveal" aria-hidden="true" style={{ transitionDelay: '0.18s' }}>
+            <div className="hero-slider" role="region" aria-label="Featured care moments">
               {heroImages.map((image, index) => (
-                <figure key={image.alt} className={`hero-frame hero-frame--${index + 1}`}>
+                <figure key={image.alt} className={`hero-slide ${index === slideIndex ? 'is-active' : ''}`}>
                   <Image
                     src={image.src}
                     alt={image.alt}
-                    width={image.width}
-                    height={image.height}
-                    sizes="(max-width: 768px) 80vw, 35vw"
+                    fill
+                    className="hero-slide__img"
+                    sizes="(max-width: 768px) 95vw, 520px"
+                    quality={100}
+                    placeholder="empty"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    unoptimized
                     priority={index === 0}
                   />
                 </figure>
               ))}
+              <div className="hero-slider__dots" role="tablist" aria-label="Select hero image">
+                {heroImages.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    role="tab"
+                    aria-selected={slideIndex === index}
+                    aria-label={`Show slide ${index + 1}`}
+                    className={`hero-dot ${slideIndex === index ? 'is-active' : ''}`}
+                    onClick={() => setSlideIndex(index)}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="hero-glasscard">
-              <p className="eyebrow">Rapid deployment</p>
-              <h3>Staffed an entire LTC wing in 36 hours.</h3>
-              <p>18-clinician team blending dementia, wound care, restorative programs, and bilingual support.</p>
+            <div className="hero-secondary scroll-reveal" style={{ transitionDelay: '0.22s' }}>
+              <div className="hero-sparkline">
+                <div>
+                  <p className="eyebrow">Live shift visibility</p>
+                  <h3>Staffed teams stay connected with families and clinical leads.</h3>
+                  <p className="hero-lead hero-lead--sub">
+                    Automated updates, digital handbooks, and rapid replacements when you need them.
+                  </p>
+                </div>
+                <div className="hero-sparkline__meter" aria-hidden="true">
+                  <span style={{ width: '86%' }} />
+                </div>
+              </div>
+
+              <div className="hero-glasscard">
+                <p className="eyebrow">Rapid deployment</p>
+                <h3>Staffed an entire LTC wing in 36 hours.</h3>
+                <p>18-clinician team blending dementia, wound care, restorative programs, and bilingual support.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -273,8 +361,12 @@ export default function Home() {
             <h2>Human-first staffing built for today&apos;s acuity.</h2>
           </div>
           <div className="highlight-grid">
-            {highlightCards.map((card) => (
-              <article key={card.title} className="highlight-card">
+            {highlightCards.map((card, index) => (
+              <article
+                key={card.title}
+                className="highlight-card scroll-reveal"
+                style={{ transitionDelay: `${index * 0.08}s` }}
+              >
                 <span className="icon-circle">{iconMap[card.icon]}</span>
                 <h3>{card.title}</h3>
                 <p>{card.copy}</p>
@@ -295,14 +387,18 @@ export default function Home() {
             </p>
           </div>
           <div className="service-grid">
-            {serviceShowcase.map((service) => (
-              <article key={service.title} className="service-tile">
+            {serviceShowcase.map((service, index) => (
+              <article
+                key={service.title}
+                className="service-tile scroll-reveal"
+                style={{ transitionDelay: `${index * 0.1}s` }}
+              >
                 <div className="service-image">
                   <Image
                     src={service.image}
                     alt={service.title}
-                    width={service.width}
-                    height={service.height}
+                    width={service.image.width}
+                    height={service.image.height}
                     sizes="(max-width: 768px) 100vw, 32vw"
                   />
                 </div>
@@ -333,14 +429,20 @@ export default function Home() {
               Every deployment includes site orientation, digital playbooks, and real-time shift feedback loops.
             </p>
             <ul className="partner-tags">
-              {partnerTags.map((tag) => (
-                <li key={tag}>{tag}</li>
+              {partnerTags.map((tag, index) => (
+                <li key={tag} className="scroll-reveal" style={{ transitionDelay: `${index * 0.06 + 0.12}s` }}>
+                  {tag}
+                </li>
               ))}
             </ul>
           </div>
           <ul className="care-steps">
-            {careSteps.map((step) => (
-              <li key={step.title}>
+            {careSteps.map((step, index) => (
+              <li
+                key={step.title}
+                className="scroll-reveal"
+                style={{ transitionDelay: `${index * 0.1 + 0.08}s` }}
+              >
                 <span>{step.step}</span>
                 <div>
                   <h3>{step.title}</h3>
@@ -359,14 +461,18 @@ export default function Home() {
             <h2>Hire RN, RPN, PSW, PCA, and allied professionals on demand.</h2>
           </div>
           <div className="talent-grid">
-            {talentSpotlight.map((talent) => (
-              <article key={talent.title} className="talent-card">
+            {talentSpotlight.map((talent, index) => (
+              <article
+                key={talent.title}
+                className="talent-card scroll-reveal"
+                style={{ transitionDelay: `${index * 0.08}s` }}
+              >
                 <div className="talent-card__image">
                   <Image
                     src={talent.image}
                     alt={talent.title}
-                    width={talent.width}
-                    height={talent.height}
+                    width={talent.image.width}
+                    height={talent.image.height}
                     sizes="(max-width: 768px) 100vw, 280px"
                   />
                 </div>
@@ -387,12 +493,14 @@ export default function Home() {
 
       <section className="section logo-section">
         <div className="container">
-          <div className="logo-card">
+          <div className="logo-card scroll-reveal" style={{ transitionDelay: '0.12s' }}>
             <p className="eyebrow">Trusted by care partners</p>
             <h2>Partner-ready for any care environment.</h2>
             <div className="logo-cloud">
-              {partnerTags.map((tag) => (
-                <span key={tag}>{tag}</span>
+              {partnerTags.map((tag, index) => (
+                <span key={tag} className="scroll-reveal" style={{ transitionDelay: `${index * 0.05 + 0.12}s` }}>
+                  {tag}
+                </span>
               ))}
             </div>
           </div>
@@ -401,7 +509,7 @@ export default function Home() {
 
       <section className="section">
         <div className="container">
-          <div className="cta-panel">
+          <div className="cta-panel scroll-reveal" style={{ transitionDelay: '0.1s' }}>
             <div>
               <p className="eyebrow">Let's collaborate</p>
               <h2>Ready to elevate staffing, retention, and patient satisfaction?</h2>
