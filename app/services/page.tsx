@@ -54,7 +54,7 @@ const services: Service[] = [
   {
     id: 'retirement',
     icon: 'LT',
-    title: 'Retirement & long-term care solutions',
+    title: 'Retirement & Long-Term staffing',
     description: 'Stable, compassionate staffing for retirement residences and long-term care homes.',
     details: [
       'Retirement home and long-term care staffing solutions',

@@ -31,11 +31,6 @@ const navItems: NavItem[] = [
         description: 'Relationship-first care standards and leadership.',
       },
       {
-        label: 'Home care for older adults',
-        href: '/services/home-care',
-        description: 'Personal care, companionship, and safety checks.',
-      },
-      {
         label: 'Quality and compliance',
         href: '/about/quality',
         description: 'Screening, training, and credential management.',
@@ -48,6 +43,11 @@ const navItems: NavItem[] = [
     description: 'Staffing programs tailored to each client',
     children: [
       {
+        label: 'Home care for older adults',
+        href: '/services/home-care',
+        description: 'Personal care, companionship, and safety checks.',
+      },
+      {
         label: 'RN & RPN staffing services',
         href: '/services/rn-rpn',
         description: 'Hospital, community, and specialty coverage matched to acuity.',
@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
         description: 'ADLs, respite, dementia, and in-home support.',
       },
       {
-        label: 'Retirement & long-term care',
+        label: 'Retirement & Long-Term staffing',
         href: '/services/retirement',
         description: 'Stabilize wings with permanent, temporary, or casual options.',
       },

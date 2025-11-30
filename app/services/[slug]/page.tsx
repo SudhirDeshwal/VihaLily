@@ -154,7 +154,7 @@ const servicePages: Record<string, ServicePage> = {
   },
   retirement: {
     badge: 'LT',
-    title: 'Retirement & Long-Term Care Solutions',
+    title: 'Retirement & Long-Term staffing',
     summary: 'Stabilize wings and households with compassionate nursing and care teams who prioritize resident experience.',
     metaTags: ['Permanent', 'Temporary', 'Casual / Block booking'],
     pillars: [

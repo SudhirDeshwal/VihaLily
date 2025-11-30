@@ -101,6 +101,18 @@ export default function Apply() {
         <p className="section-subtitle">
           Join our team of healthcare professionals. Submit your information below and we'll contact you.
         </p>
+        <div
+          className="alert"
+          role="note"
+          style={{
+            backgroundColor: 'var(--bg-blue-light)',
+            border: '1px solid var(--primary-light)',
+            color: 'var(--text-dark)',
+          }}
+        >
+          Prefer email? Send your resume and contact details to{' '}
+          <a href="mailto:hr@vihalilycare.ca">hr@vihalilycare.ca</a> and our team will follow up shortly.
+        </div>
 
         <div className="form-container">
           {status && (
